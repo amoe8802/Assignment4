@@ -1,59 +1,96 @@
 package com.coderscampus.assignment4;
 
 import java.io.*;
-import java.util.regex.PatternSyntaxException;
 
 public class Main {
-    private static final String FILE_PATH = "src/com/coderscampus/assignment4/student-master-list.csv";
-    private static final String FILE_HEADER = "Student ID,Student Name,Course,Grade\n";
-    private static final int STUDENT_ARRAY_SIZE = 100;
+	public static void main(String[] args) {
+		
+     Students[] students = parseMasterListFile();
+      
+     if (students == null || students.length == 0) {
+         System.out.println("No students found or failed to read the master list.");
+         return;
+     }
 
-    public Students[] getStudentsFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String currentLine;
-            int count = 0;
-            Students[] students = new Students[STUDENT_ARRAY_SIZE];
-            reader.readLine(); // throw away the first line since it's always the file header, not a Student
-            while ((currentLine = reader.readLine()) != null && count < STUDENT_ARRAY_SIZE) {
-                students[count++] = parseLine(currentLine);
-            }
-            return students;
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + FILE_PATH);
-            System.err.println(e.getMessage());
-        } catch (IOException e) {
-            System.err.println("File read failed: " + FILE_PATH);
-            System.err.println(e.getMessage());
-        }
-        return null;
-    }
+         ArrayList<Students> compsciStudents = new ArrayList<>();
+         ArrayList<Students> apmthStudents = new ArrayList<>();
+         ArrayList<Students> statStudents = new ArrayList<>();
 
-    private Students parseLine(String line) {
-        try {
-            String[] splitLine = line.split(",");
-            return new Students(splitLine[0], splitLine[1], splitLine[2], splitLine[3]);
-        } catch (PatternSyntaxException e) {
-            System.err.println("Invalid format for file: " + line);
-            System.err.println(e.getMessage());
-        }
-        return null;
-    }
 
-    public void writeStudentsToFile(Students[] students, String targetFilename) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFilename))) {
-            writer.write(FILE_HEADER);
-            for (Students student : students) {
-                if (student != null) {
-                    writer.write(student.toString());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + targetFilename);
-            System.err.println(e.getMessage());
-        } catch (IOException e) {
-            System.err.println("File read failed: " + targetFilename);
-            System.err.println(e.getMessage());
-        }
-    }
-	
+         for (Students student : students) {
+             if (student.getCourse().startsWith("COMPSCI")) {
+                 compsciStudents.add(student);
+             } else if (student.getCourse().startsWith("APMTH")) {
+                 apmthStudents.add(student);
+             } else if (student.getCourse().startsWith("STAT")) {
+                 statStudents.add(student);
+             }
+         }
+
+
+         sortStudentByGrade(compsciStudents);
+         sortStudentByGrade(apmthStudents);
+         sortStudentByGrade(statStudents);
+
+
+         writeStudentToCSV("course1.csv", compsciStudents);
+         writeStudentToCSV("course2.csv", apmthStudents);
+         writeStudentToCSV("course3.csv", statStudents);
+     }
+
+     private static Students[] parseMasterListFile() {
+         ArrayList<Students> students = new ArrayList<>();
+         try (BufferedReader reader = new BufferedReader(new FileReader("src/master_list.txt"))) {
+             String header = reader.readLine();
+
+             if (header == null) {
+                 System.out.println("Error: The master list file is empty.");
+                 return new Students[0];
+             }
+
+
+             String line;
+             while ((line = reader.readLine()) != null) {
+                 System.out.println("Reading line: " + line); // Debug print
+
+                 if (line.trim().isEmpty()) {
+                     continue;
+                 }
+                 String[] columns = line.split(",", 4);
+
+                 if (columns.length < 4) {
+                     System.out.println("Error: Invalid line format: " + line);
+                     continue;
+                 }
+                     try {
+                         String id = columns[0].trim();
+                         String name = columns[1].trim();
+                         String course = columns[2].trim();
+                         int grade = Integer.parseInt(columns[3].trim());
+                         Students student = new Student(id, name, course, grade);
+                         students.add(student);
+                     } catch (NumberFormatException e) {
+                         System.out.println("Error: Invalid grade format in line: " + line);
+                     }
+                 }
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return students.toArray(new Students[0]);
+     }
+
+     private static void sortStudentByGrade (ArrayList < Students > students) {
+         students.sort(Comparator.comparingInt(Students::getGrade).reversed());
+     }
+     private static void writeStudentToCSV (String file, ArrayList < Students > students){
+         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+             for (Students student : students) {
+                 writer.newLine();
+                 writer.flush();
+             }
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     
+	}
 }
