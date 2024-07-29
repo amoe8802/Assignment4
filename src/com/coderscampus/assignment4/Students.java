@@ -1,50 +1,54 @@
 package com.coderscampus.assignment4;
 
 public class Students {
-
-	private String studentID;
+    private String studentId;
     private String studentName;
-    private String course;
-    private String grade;
-    
-    public Students(String studentID, String studentName, String course, String grade) {
-        this.studentID = studentID;
-        this.studentName = studentName;
-        this.course = course;
-        this.grade = grade;
-        
+    private String studentCourse;
+    private int studentGrade;
+
+    public Students(String id, String name, String course, int grade) {
+
+        this.studentId = id;
+       this.studentName = name;
+        this.studentCourse = course;
+        this.studentGrade = grade;
     }
-        
-        public String getStudentID() {
-            return studentID;
-        }
 
-        public void setStudentID(String studentID) {
-            this.studentID = studentID;
-        }
+    public String getId() {
+        return studentId;
+    }
 
-        public String getStudentName() {
-            return studentName;
-        }
+    public void setId(String id) {
+        this.studentId = id;
+    }
 
-        public void setStudentName(String studentName) {
-            this.studentName = studentName;
-        }
+    public String getName() {
+        return studentName;
+    }
 
-        public String getCourse() {
-            return course;
-        }
+    public void setName(String name) {
+        this.studentName = name;
+    }
 
-        public void setCourse(String course) {
-            this.course = course;
-        }
+    public String getCourse() {
+        return studentCourse;
+    }
 
-        public String getGrade() {
-            return grade;
-        }
+    public void setCourse(String course) {
+        this.studentCourse = course;
+    }
 
-        public void setGrade(String grade) {
-            this.grade = grade;
-        }
-        
+    public int getGrade() {
+        return studentGrade;
+    }
+
+    public void setGrade(int grade) {
+        this.studentGrade = grade;
+    }
+
+    @Override
+    public String toString() {
+        return studentId + "," + studentName + " , " + studentCourse + " , " + studentGrade;
+
+    }
 }

@@ -1,96 +1,59 @@
 package com.coderscampus.assignment4;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class Main {
+	
 	public static void main(String[] args) {
-		
-     Students[] students = parseMasterListFile();
-      
-     if (students == null || students.length == 0) {
-         System.out.println("No students found or failed to read the master list.");
-         return;
-     }
+        Main main = new Main();
+        String masterFile = "master_list.txt";
+        Students[] students = File.readStudents(masterFile);
+        String[] courses = {"COMPSCI", "APMTH", "STAT"};
+        for (int i = 0; i < courses.length; i++) {
+            Students[] courseStudents = main.courseOrder(students, courses[i]);
+            main.gradeOrder(courseStudents);
+            main.writeStudentsToFile(courseStudents,"course" + (i+1) + ".csv");
+        }
 
-         ArrayList<Students> compsciStudents = new ArrayList<>();
-         ArrayList<Students> apmthStudents = new ArrayList<>();
-         ArrayList<Students> statStudents = new ArrayList<>();
+    }
 
+    public Students[] courseOrder(Students[] students, String course) {
+        Students[] orderStudents = new Students[students.length];
+        int index = 0;
+        for (Students student : students) {
+            if (student != null && student.getCourse().contains(course)) {
+                orderStudents[index++] = student;
 
-         for (Students student : students) {
-             if (student.getCourse().startsWith("COMPSCI")) {
-                 compsciStudents.add(student);
-             } else if (student.getCourse().startsWith("APMTH")) {
-                 apmthStudents.add(student);
-             } else if (student.getCourse().startsWith("STAT")) {
-                 statStudents.add(student);
-             }
-         }
+            }
+        }
+        return orderStudents;
+    }
 
+    public void gradeOrder(Students[] students) {
+        try {
+            Arrays.sort(students, (a, b) -> {
+                if (a == null && b == null) return 0;
+                if (a == null) return 1;
+                if (b == null) return -1;
+                return b.getGrade() - a.getGrade();
+            });
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void writeStudentsToFile(Students[] students, String fileName) {
+        try (FileWriter fw = new FileWriter(fileName)) {
+            fw.write("Student ID, Student Name, Student Course, Student Grade\n");
+            for (Students student: students) {
+                if (student != null) {
+                    fw.write(student + "\n");
 
-         sortStudentByGrade(compsciStudents);
-         sortStudentByGrade(apmthStudents);
-         sortStudentByGrade(statStudents);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-
-         writeStudentToCSV("course1.csv", compsciStudents);
-         writeStudentToCSV("course2.csv", apmthStudents);
-         writeStudentToCSV("course3.csv", statStudents);
-     }
-
-     private static Students[] parseMasterListFile() {
-         ArrayList<Students> students = new ArrayList<>();
-         try (BufferedReader reader = new BufferedReader(new FileReader("src/master_list.txt"))) {
-             String header = reader.readLine();
-
-             if (header == null) {
-                 System.out.println("Error: The master list file is empty.");
-                 return new Students[0];
-             }
-
-
-             String line;
-             while ((line = reader.readLine()) != null) {
-                 System.out.println("Reading line: " + line); // Debug print
-
-                 if (line.trim().isEmpty()) {
-                     continue;
-                 }
-                 String[] columns = line.split(",", 4);
-
-                 if (columns.length < 4) {
-                     System.out.println("Error: Invalid line format: " + line);
-                     continue;
-                 }
-                     try {
-                         String id = columns[0].trim();
-                         String name = columns[1].trim();
-                         String course = columns[2].trim();
-                         int grade = Integer.parseInt(columns[3].trim());
-                         Students student = new Student(id, name, course, grade);
-                         students.add(student);
-                     } catch (NumberFormatException e) {
-                         System.out.println("Error: Invalid grade format in line: " + line);
-                     }
-                 }
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
-         return students.toArray(new Students[0]);
-     }
-
-     private static void sortStudentByGrade (ArrayList < Students > students) {
-         students.sort(Comparator.comparingInt(Students::getGrade).reversed());
-     }
-     private static void writeStudentToCSV (String file, ArrayList < Students > students){
-         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-             for (Students student : students) {
-                 writer.newLine();
-                 writer.flush();
-             }
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
-     
-	}
+    }
 }
