@@ -1,14 +1,23 @@
 package com.coderscampus.assignment4;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
 	
 	public static void main(String[] args) {
-        Main main = new Main();
-        String masterFile = "master_list.txt";
-        Students[] students = File.readStudents(masterFile);
+		// TODO Auto-generated method stub
+		
+		Main main = new Main();
+        String master_File = "Master_File.txt";
+        Students[] students;
+        
+			try {
+			students = File.readStudents(master_File);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
         String[] courses = {"COMPSCI", "APMTH", "STAT"};
         for (int i = 0; i < courses.length; i++) {
             Students[] courseStudents = main.courseOrder(students, courses[i]);
@@ -56,4 +65,5 @@ public class Main {
         }
 
     }
+    
 }
