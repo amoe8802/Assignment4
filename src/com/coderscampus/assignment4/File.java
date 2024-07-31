@@ -3,14 +3,11 @@ package com.coderscampus.assignment4;
 import java.io.*;
 
 public class File {
-
-	public static Students[] main(String[] args) {
-		// TODO Auto-generated method stub
 			
-			Students[] readStudents(String masterFile) {
+			public static Students[] readStudents(String master_File) {
 		        Students[] students = new Students[100];
 
-		        try (BufferedReader br = new BufferedReader(new FileReader(masterFile))) {
+		        try (BufferedReader br = new BufferedReader(new FileReader(master_File))) {
 		            String line;
 		            br.readLine();
 		            int index = 0;
