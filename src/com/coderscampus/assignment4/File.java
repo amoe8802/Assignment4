@@ -4,10 +4,10 @@ import java.io.*;
 
 public class File {
 			
-			public static Students[] readStudents(String master_File) {
+			public static Students[] readStudents(String Master_File) {
 		        Students[] students = new Students[100];
-
-		        try (BufferedReader br = new BufferedReader(new FileReader(master_File))) {
+		      
+		        try (BufferedReader br = new BufferedReader(new FileReader(Master_File))) {
 		            String line;
 		            br.readLine();
 		            int index = 0;

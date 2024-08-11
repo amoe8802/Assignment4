@@ -9,15 +9,8 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		Main main = new Main();
-        String master_File = "Master_File.txt";
-        Students[] students;
-        
-			try {
-			students = File.readStudents(master_File);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+        String Master_File = "Master_File";
+        Students[] students = File.readStudents(Master_File);
         String[] courses = {"COMPSCI", "APMTH", "STAT"};
         for (int i = 0; i < courses.length; i++) {
             Students[] courseStudents = main.courseOrder(students, courses[i]);
@@ -65,5 +58,4 @@ public class Main {
         }
 
     }
-    
 }
