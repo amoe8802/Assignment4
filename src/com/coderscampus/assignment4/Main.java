@@ -10,7 +10,7 @@ public class Main {
 		
 		Main main = new Main();
         String Master_File = "Master_File";
-        Students[] students = File.readStudents(Master_File);
+        Students[] students = StudentFile.readStudents(Master_File);
         String[] courses = {"COMPSCI", "APMTH", "STAT"};
         for (int i = 0; i < courses.length; i++) {
             Students[] courseStudents = main.courseOrder(students, courses[i]);

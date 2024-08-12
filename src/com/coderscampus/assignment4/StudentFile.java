@@ -2,7 +2,7 @@ package com.coderscampus.assignment4;
 
 import java.io.*;
 
-public class File {
+public class StudentFile {
 			
 			public static Students[] readStudents(String Master_File) {
 		        Students[] students = new Students[100];
